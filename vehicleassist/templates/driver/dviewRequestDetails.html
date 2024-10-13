@@ -1,0 +1,199 @@
+{% extends 'driverNavbar.html' %}
+{% block main %}
+
+<section class="content">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">View Request Details</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'ddashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Assign Request</li>
+                        <li class="breadcrumb-item active">View Request Details</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">View Request Details</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <tr>
+                                <th style="color: orange;">Booking Number</th>
+                                <td colspan="4" style="color: orange;font-weight: bold;">{{book.BookingNumber}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td>{{book.user.username}}</td>
+                                <th>Name</th>
+                                <td>{{book.user.first_name}} {{book.user.last_name}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Destination</th>
+                                <td>{{book.Destination}}</td>
+                                <th>Pickup Location</th>
+                                <td>{{book.PickupLoc}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Pickup Time</th>
+                                <td>{{book.PickupDate}}</td>
+                                <th>Pickup Date</th>
+                                <td>{{book.PickupTime}}</td>
+
+                            </tr>
+                            <tr>
+                                <th>Assign To</th>
+                                {% if not book.AssignTo %}
+                                <td>Not Updated Yet</td>
+                                {% else %}
+                                <td>{{book.AssignTo}}</td>
+                                {% endif %}
+
+                                <th>Date of Request</th>
+                                <td>{{book.DateofRequest}}</td>
+                            </tr>
+
+                            <tr>
+                                {% if book.Status == 'On The Way' %}
+                                <th>Order Final Status</th>
+                                <td>Driver is on the way</td>
+                                {% endif %}
+
+                                {% if book.Status == 'Completed' %}
+                                <th>Order Final Status</th>
+                                <td>Your request has been Completed</td>
+                                {% endif %}
+
+                                {% if not book.Status %}
+                                <th>Order Final Status</th>
+                                <td>Not Response Yet</td>
+                                {% endif %}
+
+                                {% if book.Remark == None %}
+                                <th>Driver Remark</th>
+                                <td colspan="4">Not Updated Yet</td>
+                                {% else %}
+                                <th>Driver Remark</th>
+                                <td>{{book.Remark}}</td>
+                                {% endif %}
+                            </tr>
+                        </table>
+
+                        {% if reportcount != 0 %}
+                        <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+
+                            <tr align="center">
+                                <th colspan="4" style="color: blue">Tracking History</th>
+                            </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Remark</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+
+                            {% for i in report1 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.Remark}}</td>
+                                <td>{{i.Status}}</td>
+                                <td>{{i.UpdationDate}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+
+                        {% if reportcount == 0 %}
+                            <h4 align="center" style="color:red"> No Tracking history found </h4>
+                        {% endif %}
+
+                        {% if book.Status == 'Approved' or book.Status == 'On The Way' %}
+                        <p align="center" style="padding-top: 20px">
+                            <button class="btn btn-primary waves-effect waves-light w-lg" data-toggle="modal"
+                                    data-target="#myModal">Take Action
+                            </button>
+                        </p>
+                        {% endif %}
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Take Action</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <table class="table table-bordered table-hover data-tables">
+                                                <tr>
+                                                    <th>Remark :</th>
+                                                    <td>
+                                                        <textarea name="Remark" placeholder="Remark" rows="5" cols="12"
+                                                                  class="form-control" required></textarea>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <th>Status :</th>
+                                                    <td><select name="Status" class="form-control" required>
+                                                        <option value="On The Way" selected="true">On the way</option>
+                                                        <option value="Completed">Task Completed</option>
+                                                    </select>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" name="submit" class="btn btn-primary">Update
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        {% if error == "no" %}
+        <script>
+              alert('Remark has been Updated');
+              window.location=('{% url 'dviewRequestDetails' book.id %}');
+        </script>
+        {% endif %}
+        {% if error == "yes" %}
+        <script>
+              alert('Something Went Wrong. Please try again');
+        </script>
+        {% endif %}
+
+{% endblock %}

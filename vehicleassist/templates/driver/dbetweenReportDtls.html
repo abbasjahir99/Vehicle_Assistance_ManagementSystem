@@ -1,0 +1,84 @@
+{% extends 'driverNavbar.html' %}
+{% block main %}
+
+<section class="content">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Report Details</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'ddashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Report</li>
+                        <li class="breadcrumb-item active">Between Date Report</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Between Date Report Details</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <h5 align="center" style="color:blue">Report from <span style="color:red">{{fd}}</span> to <span
+                    style="color:red">{{td}}</span></h5>
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Booking Number</th>
+                                <th>Full Name</th>
+                                <th>Mobile Number</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Request Date</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for i in book %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{i.BookingNumber}}</td>
+                                <td>{{i.user.first_name}} {{i.user.last_name}}</td>
+                                <td>{{i.PhoneNumber}}</td>
+                                <td>{{i.user.username}}</td>
+
+                                {% if not i.Status %}
+                                <td>Not Update Yet</td>
+                                {% else %}
+                                <td>{{i.Status}}</td>
+                                {% endif %}
+                                <td>{{i.DateofRequest}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary"
+                                           href="{% url 'dviewRequestDetails' i.id %}"><i
+                                                class="fa fa-eye"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'adminNavbar.html' %}
+{% block main %}
+{% load static %}
+
+<section class="content">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Add Driver</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Driver</li>
+                        <li class="breadcrumb-item active">Add Driver</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add New Driver</h3>
+                    </div>
+
+                    <!-- form start -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Driver ID</label>
+                                <input type="text" name="DriverID" class="form-control" value="{{driverid}}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" name="firstName" class="form-control" placeholder="Enter Full Name"
+                                       required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mobile Number</label>
+                                <input type="text" name="MobileNumber" class="form-control"
+                                       placeholder="Enter Mobile Number" maxlength="10" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" name="emailid" class="form-control" placeholder="Enter Email"
+                                       required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input type="text" name="Address" class="form-control" placeholder="Enter Address"
+                                       required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="password" class="form-control" placeholder="Enter Password"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+{% if error == "no" %}
+<script>
+        alert('New Driver has been Added Successfully.');
+        window.location=('{% url 'manageDriver' %}');
+</script>
+{% endif %}
+
+{% if error == "yes" %}
+<script>
+        alert('Something went wrong, Try Again...');
+</script>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'driverNavbar.html' %}
+{% block main %}
+
+<section class="content">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Search</h1>
+                </div>
+
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{% url 'ddashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Search</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Search</h3>
+                    </div>
+
+                    <!-- form start -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Search by Booking No./Name/Mobile No.</label>
+                                <input type="text" name="searchdata" placeholder="Enter Booking No./Name/Mobile No."
+                                       class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        {% if book1 %}
+        <div class="card-body">
+            <h4 align="center">Search Report against "{{sd}}" keyword </h4>
+            <hr>
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Booking Number</th>
+                    <th>Full Name</th>
+                    <th>Mobile Number</th>
+                    <th>Email ID</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for i in book1 %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{i.BookingNumber}}</td>
+                    <td>{{i.user.first_name}} {{i.user.last_name}}</td>
+                    <td>{{i.PhoneNumber}}</td>
+                    <td>{{i.user.username}}</td>
+                    {% if i.Status == None %}
+                        <td>Not Update Yet</td>
+                    {% else %}
+                        <td>{{i.Status}}</td>
+                    {% endif %}
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-primary"
+                               href="{% url 'dviewRequestDetails' i.id %}"><i class="fa fa-eye"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}
